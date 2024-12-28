@@ -54,7 +54,7 @@ const App = () => {
             onPress={() => {
               router.push("/sign-in");
             }}
-            containerStyles="w-full mt-7"
+            containerStyles={"w-full mt-7"}
           />
         </View>
       </ScrollView>

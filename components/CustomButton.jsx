@@ -11,7 +11,7 @@ const CustomButton = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className={` bg-secondary py-3 rounded-lg flex flex-row justify-center items-center ${containerStyles} ${
+      className={`bg-secondary py-3 rounded-lg flex flex-row justify-center items-center ${containerStyles} ${
         isLoading ? "opacity-50" : ""
       }`}
       disabled={isLoading}
