@@ -1,12 +1,15 @@
-import { View, Text } from "react-native";
 import React from "react";
+import { View, Text } from "react-native";
+import { useSearchParams } from "expo-router";
 
-const Search = () => {
+const QueryPage = () => {
+  const { query } = useSearchParams();
+
   return (
     <View>
-      <Text>Search</Text>
+      <Text>Search Query: {query}</Text>
     </View>
   );
 };
 
-export default Search;
+export default QueryPage;
