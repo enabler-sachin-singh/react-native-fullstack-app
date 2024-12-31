@@ -12,10 +12,10 @@ const GlobalProvider = ({ children }) => {
     getCurrentUser()
       .then((res) => {
         if (res) {
-          setIsLoading(true);
+          setIsLoggedIn(true);
           setUser(res);
         } else {
-          setIsLoading(false);
+          setIsLoggedIn(true);
           setUser(null);
         }
       })
@@ -28,7 +28,7 @@ const GlobalProvider = ({ children }) => {
   }, []);
 
   //   Values Object
-  const values = { isLoading, user, isLoggedIn, setIsLoggedIn };
+  const values = { isLoading, user, isLoggedIn, setIsLoggedIn, setUser };
   return (
     <GlobalContext.Provider value={values}>{children}</GlobalContext.Provider>
   );

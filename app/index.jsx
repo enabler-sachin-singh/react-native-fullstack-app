@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Redirect, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Text, View, ScrollView, Image } from "react-native";
@@ -9,10 +9,9 @@ import { GlobalContext } from "../contexts/GlobalProvider";
 
 const App = () => {
   const GlobalCtx = useContext(GlobalContext);
-  const { isLoggedIn, isLoading } = GlobalCtx;
 
-  if (!isLoading && isLoggedIn) {
-    <Redirect href="/home" />;
+  if (!GlobalCtx?.isLoading && GlobalCtx?.isLoggedIn) {
+    return <Redirect href="/home" />;
   }
 
   return (

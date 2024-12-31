@@ -28,13 +28,16 @@ const SignIn = () => {
     try {
       await signIn(form.email, form.password);
       const result = await getCurrentUser();
+      console.log("Current User:", result);
       //   set it to global state...
-      GlobalCTX.setUser(result);
-      GlobalCTX.setIsLoggedIn(true);
+      GlobalCTX?.setUser(result);
+      GlobalCTX?.setIsLoggedIn(true);
+      console.log("Global state updated:", GlobalCTX);
 
       // Alert message after success
       Alert.alert("Success", "User signed in successfully");
       router.replace("/home");
+      console.log("Redirecting to /home");
       setForm({ userName: "", email: "", password: "" });
     } catch (error) {
       Alert.alert("Error", error.message);
