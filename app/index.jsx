@@ -60,7 +60,7 @@ const App = () => {
           <CustomButton
             title="Continue with Email"
             onPress={() => {
-              router.push("/sign-in");
+              router.replace("/home");
             }}
             containerStyles={{ width: "100%", marginTop: 20 }}
             textStyles={{ fontSize: 16 }}
