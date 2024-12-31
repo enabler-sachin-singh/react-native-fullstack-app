@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Text, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { createUser } from "../../lib/appwrite";
+import { Link, router } from "expo-router";
+import { GlobalContext } from "../../contexts/GlobalProvider";
 
 const SignUp = () => {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({ userName: "", email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const GloblCTX = useContext(GlobalContext);
 
   // Function to handle input changes
   const onHandleChange = (field, value) => {
@@ -16,7 +19,24 @@ const SignUp = () => {
   };
 
   // Function to submit the form
-  const onHandleSubmit = () => {};
+  const onHandleSignUp = async () => {
+    if (!form.email || !form.password || !form.userName) {
+      Alert.alert("Error", "Please Fill all the fields");
+    }
+    setIsSubmitting(true);
+
+    try {
+      const result = await createUser(form.email, form.password, form.userName);
+      //   set it to global state...
+      GloblCTX.setUser(result);
+      router.replace("/home");
+      setForm({ userName: "", email: "", password: "" });
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -34,9 +54,9 @@ const SignUp = () => {
           {/* Username field */}
           <FormField
             title="Username"
-            value={form.username}
+            value={form.userName}
             placeholder="Enter your Name"
-            handleChangeText={(value) => onHandleChange("Username", value)}
+            handleChangeText={(value) => onHandleChange("userName", value)}
             otherStyles={{ marginTop: 20 }}
           />
 
@@ -60,7 +80,7 @@ const SignUp = () => {
 
           <CustomButton
             title="Sign Up"
-            onPress={onHandleSubmit}
+            onPress={onHandleSignUp}
             containerStyles={{ marginTop: 20 }}
             textStyles={{ fontSize: 16 }}
             isLoading={isSubmitting}

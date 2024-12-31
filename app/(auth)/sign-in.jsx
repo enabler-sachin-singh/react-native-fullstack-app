@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Text, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { getCurrentUser, signIn } from "../../lib/appwrite";
+import { GlobalContext } from "../../contexts/GlobalProvider";
 
 const SignIn = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const GlobalCTX = useContext(GlobalContext);
 
   // Function to handle input changes
   const onHandleChange = (field, value) => {
@@ -16,7 +19,32 @@ const SignIn = () => {
   };
 
   // Function to submit the form
-  const onHandleSubmit = () => {};
+  const onHandleSignIn = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please Fill all the fields");
+    }
+    setIsSubmitting(true);
+
+    try {
+      await signIn(form.email, form.password);
+      const result = await getCurrentUser();
+      console.log("Current User:", result);
+      //   set it to global state...
+      GlobalCTX?.setUser(result);
+      GlobalCTX?.setIsLoggedIn(true);
+      console.log("Global state updated:", GlobalCTX);
+
+      // Alert message after success
+      Alert.alert("Success", "User signed in successfully");
+      router.replace("/home");
+      console.log("Redirecting to /home");
+      setForm({ userName: "", email: "", password: "" });
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -51,7 +79,7 @@ const SignIn = () => {
 
           <CustomButton
             title="Sign In"
-            onPress={onHandleSubmit}
+            onPress={onHandleSignIn}
             containerStyles={{ marginTop: 20 }}
             textStyles={{ fontSize: 16 }}
             isLoading={isSubmitting}
