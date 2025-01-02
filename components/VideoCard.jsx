@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { Video, ResizeMode } from "expo-av";
+import { useVideoPlayer, VideoView } from "expo-video";
 import { icons } from "../constants";
 
 const VideoCard = ({
@@ -11,7 +11,10 @@ const VideoCard = ({
     creator: { username, avatar },
   },
 }) => {
-  const [play, setPlay] = useState(false);
+  const { videoPlayerRef, togglePlay, isPlaying } = useVideoPlayer({
+    shouldPlay: false,
+    video: { uri: video },
+  });
 
   return (
     <View style={styles.container}>
@@ -36,6 +39,7 @@ const VideoCard = ({
             </Text>
           </View>
         </View>
+
         {/* Menu Icon */}
         <View style={styles.menuContainer}>
           <Image
@@ -45,23 +49,18 @@ const VideoCard = ({
           />
         </View>
       </View>
-      {play ? (
-        <Video
-          source={{ uri: video }}
+      {isPlaying ? (
+        <VideoView
+          ref={videoPlayerRef}
           style={styles.video}
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
+          allowsFullscreen
+          allowsPictureInPicture
+          resizeMode="contain"
         />
       ) : (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => setPlay(true)}
+          onPress={togglePlay}
           style={styles.thumbnailContainer}
         >
           <Image
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     height: 46,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#6B7280", // Replace with your secondary color
+    borderColor: "#6B7280",
     justifyContent: "center",
     alignItems: "center",
     padding: 1,
