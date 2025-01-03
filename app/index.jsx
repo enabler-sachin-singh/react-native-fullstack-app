@@ -10,8 +10,12 @@ import { GlobalContext } from "../contexts/GlobalProvider";
 const App = () => {
   const GlobalCtx = useContext(GlobalContext);
 
-  if (!GlobalCtx?.isLoading && GlobalCtx?.isLoggedIn) {
-    return <Redirect href="/home" />;
+  if (!GlobalCtx?.isLoading) {
+    if (GlobalCtx?.isLoggedIn) {
+      return <Redirect href="/home" />;
+    } else {
+      return <Redirect href="/sign-in" />;
+    }
   }
 
   return (
@@ -60,7 +64,7 @@ const App = () => {
           <CustomButton
             title="Continue with Email"
             onPress={() => {
-              router.replace("/home");
+              router.replace("/sign-in");
             }}
             containerStyles={{ width: "100%", marginTop: 20 }}
             textStyles={{ fontSize: 16 }}
