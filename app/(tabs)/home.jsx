@@ -18,9 +18,7 @@ import VideoCard from "../../components/VideoCard";
 
 const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
-  // Used a custom hook to fetch the data and rename the data as : posts
   const { data: posts, refetch } = useAppwrite(getAllPosts);
-  // To get the lates videos
   const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const onRefresh = async () => {
